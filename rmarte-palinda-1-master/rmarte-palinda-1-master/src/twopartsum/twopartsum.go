@@ -2,23 +2,39 @@ package main
 
 import (
 	"fmt"
+	"math/bits"
 )
 
 // sum the numbers in a and send the result on res.
 func sum(a []int, res chan<- int) {
-	// TODO sum a
-	// TODO send result on res
+	sum := 0
+	for _, val := range a {
+		sum += val
+	}
+
+	res <- sum
 }
 
 // concurrently sum the array a.
 func ConcurrentSum(a []int) int {
 	n := len(a)
 	ch := make(chan int)
-	go sum(a[:n/2], ch)
-	go sum(a[n/2:], ch)
+	splits := 32 - bits.LeadingZeros32(uint32(n)) //budget log2
+	flen := n / splits
+
+	for s := 0; s < splits-1; s++ {
+		go sum(a[s*flen:(s+1)*flen], ch)
+	}
+
+	go sum(a[(splits-1)*flen:], ch)
 
 	// TODO Get the subtotals from the channel and return their sum
-	return -1
+	tot := 0
+	for s := 0; s < splits; s++ {
+		tot += <-ch
+	}
+
+	return tot
 }
 
 func main() {
