@@ -42,10 +42,38 @@ func main() {
 // The oracle also prints sporadic prophecies to stdout even without being asked.
 func Oracle() chan<- string {
 	questions := make(chan string)
-	// TODO: Answer questions.
-	// TODO: Make prophecies.
-	// TODO: Print answers.
+	results := make(chan string)
+
+	go answer(questions, results)
+	go jargon(results)
+	go print(results)
+
 	return questions
+}
+
+func jargon(results chan<- string) {
+	for {
+		time.Sleep(time.Duration(20+rand.Intn(40)) * time.Second)
+		results <- "My spirtualitymeter 3000 is showing a tremendous reaction!!!"
+		time.Sleep(time.Duration(2) * time.Second)
+		results <- "There's a ghost nearby, it says the string of its name satisfies [A - z], is it a relative perhaps?"
+		time.Sleep(time.Duration(5) * time.Second)
+		results <- "From its vibrations I can deduce that it's either male of female, probably a very close relative as well."
+		time.Sleep(time.Duration(3) * time.Second)
+		results <- "Using it as a medium to the great unknown, I can foresee that you will leave as an unsatisfied customer"
+	}
+}
+
+func answer(questions <-chan string, results chan<- string) {
+	for question := range questions {
+		prophecy(question, results)
+	}
+}
+
+func print(results <-chan string) {
+	for res := range results {
+		fmt.Println(res)
+	}
 }
 
 // This is the oracle's secret algorithm.
