@@ -23,13 +23,13 @@ There's gonna be a deadlock for even number of people. As it then becomes the sa
 
 I made two parallellized versions of the julia.go program, highligting what's good/bad parrallelization. Using the [bench.py](../src/bench.py) script it'll benchmark the julia files otput times and make a nice looking graph. 
 #### [julia_ypar.go](../src/julia_ypar.go)
-unique subroutine for each y pixel of the image.
+> unique subroutine for each y pixel of the image.
 
 #### [julia_imgpar.go](../src/julia_imgpar.go)
-unique subroutine for each image.
-
+> unique subroutine for each image.
+ 
 #### [julia_slow.go](../src/julia_slow.go)
-unparallellized
+> unparallellized
 
 
 ![juliagraph](./JuliaFigure.png)
@@ -37,3 +37,7 @@ unparallellized
 
 ## Task 3 - MapReduce
 
+|Variant       | Runtime (ms) |
+| ------------ | ------------:|
+| singleworker |         1896 |
+| mapreduce    |          473 |

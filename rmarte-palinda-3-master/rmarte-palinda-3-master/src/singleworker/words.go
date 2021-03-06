@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"strings"
 	"time"
+	"unicode"
 )
 
 const DataFile = "loremipsum.txt"
@@ -10,7 +13,18 @@ const DataFile = "loremipsum.txt"
 // Return the word frequencies of the text argument.
 func WordCount(text string) map[string]int {
 	freqs := make(map[string]int)
-	// ...
+	for _, word := range strings.FieldsFunc(strings.ToLower(text), func(c rune) bool {
+		return unicode.IsSpace(c) || unicode.IsPunct(c)
+	}) {
+		count, exist := freqs[word]
+		if !exist {
+			freqs[word] = 1
+			continue
+		}
+
+		freqs[word] = count + 1
+	}
+
 	return freqs
 }
 
@@ -37,8 +51,7 @@ func printResults(runtimeMillis int64, numRuns int) {
 
 func main() {
 	// read in DataFile as a string called data
-
-	fmt.Printf("%#v", WordCount(string(data)))
+	data, _ := ioutil.ReadFile("loremipsum.txt")
 
 	numRuns := 100
 	runtimeMillis := benchmark(string(data), numRuns)
