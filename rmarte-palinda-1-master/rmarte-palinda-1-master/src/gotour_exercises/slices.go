@@ -1,6 +1,7 @@
 package main
 
 import "golang.org/x/tour/pic"
+import "math"
 
 const maxiter = 1000
 
@@ -16,10 +17,8 @@ func Pic(dx, dy int) (img [][]uint8) {
 	ecx := fw / 2
 	ecy := fh / 4
 
-	rx := fw / 6
-	ry := fh / 12
-	rx *= rx
-	ry *= ry
+	rx := math.Pow(fw/5, 4)
+	ry := math.Pow(fh/10, 4)
 
 	for y := range img {
 		for x := range img[y] {
@@ -32,7 +31,7 @@ func Pic(dx, dy int) (img [][]uint8) {
 				img[y][x] = 0
 			}
 
-			if (fx-ecx)*(fx-ecx)/rx+(fy-ecy)*(fy-ecy)/ry < 1 {
+			if math.Pow(fx-ecx, 4)/rx+math.Pow(fy-ecy, 4)/ry < 1 {
 				img[y][x] = uint8(255 - (fx+fy)/2)
 			}
 		}
